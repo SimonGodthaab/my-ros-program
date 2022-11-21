@@ -1,14 +1,14 @@
 # parameters
-ARG REPO_NAME="<REPO_NAME_HERE>"
-ARG DESCRIPTION="<DESCRIPTION_HERE>"
-ARG MAINTAINER="<YOUR_FULL_NAME> (<YOUR_EMAIL_ADDRESS>)"
+ARG REPO_NAME="dt-core"
+ARG DESCRIPTION="Provides high-level autonomy and fleet-coordination capabilities"
+ARG MAINTAINER="Andrea F. Daniele (afdaniele@ttic.edu)"
 # pick an icon from: https://fontawesome.com/v4.7.0/icons/
-ARG ICON="cube"
+ARG ICON="diamond"
 
 # ==================================================>
 # ==> Do not change the code below this line
-ARG ARCH=arm64v8
-ARG DISTRO=ente
+ARG ARCH=arm32v7
+ARG DISTRO=daffy
 ARG BASE_TAG=${DISTRO}-${ARCH}
 ARG BASE_IMAGE=dt-ros-commons
 ARG LAUNCHER=default
@@ -51,10 +51,15 @@ ENV DT_LAUNCHER "${LAUNCHER}"
 COPY ./dependencies-apt.txt "${REPO_PATH}/"
 RUN dt-apt-install ${REPO_PATH}/dependencies-apt.txt
 
-# install python3 dependencies
+# make sure the python environment is consistent before installing new dependencies
+RUN python3 -m pip check
+
+
 ARG PIP_INDEX_URL="https://pypi.org/simple"
 ENV PIP_INDEX_URL=${PIP_INDEX_URL}
 RUN echo PIP_INDEX_URL=${PIP_INDEX_URL}
+
+# install python3 dependencies
 COPY ./dependencies-py3.* "${REPO_PATH}/"
 RUN python3 -m pip install  -r ${REPO_PATH}/dependencies-py3.txt
 
@@ -86,3 +91,11 @@ LABEL org.duckietown.label.module.type="${REPO_NAME}" \
     org.duckietown.label.maintainer="${MAINTAINER}"
 # <== Do not change the code above this line
 # <==================================================
+
+ENV DUCKIETOWN_ROOT="${SOURCE_DIR}"
+# used for downloads
+ENV DUCKIETOWN_DATA="/tmp/duckietown-data"
+RUN echo 'config echo 1' > .compmake.rc
+
+COPY scripts/send-fsm-state.sh /usr/local/bin
+
