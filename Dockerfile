@@ -1,7 +1,7 @@
 # parameters
-ARG REPO_NAME="dt-core"
+ARG REPO_NAME="my-ros-program"
 ARG DESCRIPTION="Provides high-level autonomy and fleet-coordination capabilities"
-ARG MAINTAINER="Andrea F. Daniele (afdaniele@ttic.edu)"
+ARG MAINTAINER="Mangus (lol@lollol.lol)"
 # pick an icon from: https://fontawesome.com/v4.7.0/icons/
 ARG ICON="diamond"
 
